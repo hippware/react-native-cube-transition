@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/tlackemann/react-native-cube-transition/issues"
   },
-  "homepage": "https://github.com/tlackemann/react-native-cube-transition#readme"
+  "homepage": "https://github.com/tlackemann/react-native-cube-transition#readme",
+  "dependencies": {
+    "react-navigation": "^1.0.0-beta.11"
+  }
 }
