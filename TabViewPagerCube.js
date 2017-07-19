@@ -112,7 +112,7 @@ export default class TabViewPagerScroll<T: Route<*>>
   render() {
     const { children, layout, navigationState } = this.props;
     return (
-      <RNCubeTransition style={styles.cube}>
+      <RNCubeTransition style={styles.cube} index={navigationState.index}>
         {Children.map(children, (child, i) => (
           <View
             key={navigationState.routes[i].key}

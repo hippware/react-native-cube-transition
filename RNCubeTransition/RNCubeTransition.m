@@ -27,6 +27,17 @@
 
 @implementation RNCubeTransition
 
+- (void)setIndex:(NSInteger)index
+{
+    if (self.currentIndex < index) {
+        [self moveRight];
+    }
+    if (self.currentIndex > index) {
+        [self moveLeft];
+    }
+    //self.gradientLayer.startPoint = start;
+}
+
 - (instancetype)init {
     if ((self = [super init])) {
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
@@ -246,5 +257,137 @@
         }
     }
     // End Moving Right
+}
+
+
+-(void)moveRight {
+    // Get the current view
+    UIView *_currentSubview = [self.subviews objectAtIndex:self.currentIndex];
+        self.nextIndex = 0;
+        
+        // Get the next subview in line
+        if (self.currentIndex + 1 < self.numberOfFaces) {
+            self.nextIndex = self.currentIndex + 1;
+        }
+            // Take a screenshot of the next face on first gesture
+            self.nextSubview = [self.subviews objectAtIndex:self.nextIndex];
+            self.nextScreenshot = [self.nextSubview snapshotViewAfterScreenUpdates:NO];
+            
+//            // Start the animation
+//            [CATransaction begin];
+//            [self addSubview:self.nextScreenshot];
+//            self.animation = [CATransition animation];
+//            self.animation.duration = 1.0;
+//            [self.animation setType:@"cube"];
+//            [self.animation setSubtype:kCATransitionFromRight];
+//            //      [self.animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]];
+//            
+//            self.layer.speed = 0.0;
+//            [[self layer] addAnimation:self.animation forKey:@"cube"];
+//            [CATransaction commit];
+//            
+//            self.panning = true;
+//            // Continue with the animation
+//            
+//            [self.layer removeAllAnimations];
+            //[self.nextScreenshot removeFromSuperview];
+            
+            self.layer.speed = 1.0;
+            
+            [CATransaction begin];
+            self.animation = [CATransition animation];
+            self.animation.duration = 1.5;
+            
+            // If we're past a certain time, just move forward
+//            if (self.layer.timeOffset >= 0.5) {
+                self.snap = YES;
+                self.animation.speed = -0.75;
+                self.animation.beginTime = CACurrentMediaTime() + ((self.layer.timeOffset - 1.0) * 1.25);
+//            } else {
+//                self.animation.speed = 0.75;
+//                self.animation.beginTime = CACurrentMediaTime() - ((1.0 - self.layer.timeOffset) * 1.25);
+//            }
+            
+            self.animation.fillMode = kCAFillModeForwards;
+            self.animation.removedOnCompletion = NO; // prevents image from flickering
+            [self.animation setType:@"cube"];
+            [self.animation setSubtype:kCATransitionFromLeft];
+            
+            [CATransaction setCompletionBlock:^{
+                [self.layer removeAllAnimations];
+                
+                [self.nextScreenshot removeFromSuperview];
+                
+                if (self.snap == YES) {
+                    // Move the next image/view into place
+                    CGRect currentSubviewOffsetFrame = [[_currentSubview.layer presentationLayer] frame];
+                    currentSubviewOffsetFrame.origin.x = -1 * _currentSubview.bounds.size.width * (self.currentIndex + 1);
+                    _currentSubview.frame = currentSubviewOffsetFrame;
+                    
+                    CGRect nextSubviewOffsetFrame = [[self.nextSubview.layer presentationLayer] frame];
+                    nextSubviewOffsetFrame.origin.x = 0;
+                    self.nextSubview.frame = nextSubviewOffsetFrame;
+                    
+                    self.currentIndex = self.nextIndex;
+                }
+                self.snap = NO;
+            }];
+            
+            [[self layer] addAnimation:self.animation forKey:@"cube"];
+            [CATransaction commit];
+            
+            self.panning = false;
+    // End Moving Left
+}
+
+
+-(void)moveLeft {
+    self.nextIndex = 0;
+    
+    // Get the next subview in line
+    if (self.currentIndex + 1 < self.numberOfFaces) {
+        self.nextIndex = self.currentIndex + 1;
+    }
+    // Get the current view
+    UIView *_currentSubview = [self.subviews objectAtIndex:self.currentIndex];
+        // Take a screenshot of the next face on first gesture
+        self.nextSubview = [self.subviews objectAtIndex:self.nextIndex];
+        self.nextScreenshot = [self.nextSubview snapshotViewAfterScreenUpdates:NO];
+        
+    self.layer.speed = 1.0;
+    
+    [CATransaction begin];
+    self.animation = [CATransition animation];
+    self.animation.duration = 1.5;
+    self.layer.timeOffset = 0;
+        self.animation.speed = -0.75;
+        self.animation.beginTime = CACurrentMediaTime() + ((self.layer.timeOffset - 1.0) * 1.25);
+    
+    self.animation.fillMode = kCAFillModeForwards;
+    self.animation.removedOnCompletion = NO; // prevents image from flickering
+    [self.animation setType:@"cube"];
+    [self.animation setSubtype:kCATransitionFromRight];
+    
+    [CATransaction setCompletionBlock:^{
+        [self.layer removeAllAnimations];
+        
+        [self.nextScreenshot removeFromSuperview];
+        
+            // Move the next image/view into place
+            CGRect currentSubviewOffsetFrame = [[_currentSubview.layer presentationLayer] frame];
+            currentSubviewOffsetFrame.origin.x = -1 * _currentSubview.bounds.size.width * (self.currentIndex + 1);
+            _currentSubview.frame = currentSubviewOffsetFrame;
+            
+            CGRect nextSubviewOffsetFrame = [[self.nextSubview.layer presentationLayer] frame];
+            nextSubviewOffsetFrame.origin.x = 0;
+            self.nextSubview.frame = nextSubviewOffsetFrame;
+            
+            self.currentIndex = self.nextIndex;
+    }];
+    
+    [[self layer] addAnimation:self.animation forKey:@"cube"];
+    [CATransaction commit];
+    
+    self.panning = false;
 }
 @end
