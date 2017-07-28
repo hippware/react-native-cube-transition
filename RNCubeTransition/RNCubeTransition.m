@@ -461,15 +461,18 @@
 
 -(void)moveRight {
     OwnPanGestureRecognizer *pan = [[OwnPanGestureRecognizer alloc] init];
-    [pan setTotalState:UIGestureRecognizerStateBegan];
-    [self handlePan:pan withTranslation:CGPointMake(-10, 0)];
-    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [pan setTotalState:UIGestureRecognizerStateBegan];
+        [self handlePan:pan withTranslation:CGPointMake(-10, 0)];
+        
+    });
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [pan setTotalState:UIGestureRecognizerStateChanged];
         [self handlePan:pan withTranslation:CGPointMake(-120, 0)];
     });
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [pan setTotalState:UIGestureRecognizerStateChanged];
         [self handlePan:pan withTranslation:CGPointMake(-250, 0)];
         [pan setTotalState:UIGestureRecognizerStateEnded];
@@ -479,17 +482,20 @@
 
 -(void)moveLeft {
     OwnPanGestureRecognizer *pan = [[OwnPanGestureRecognizer alloc] init];
-    [pan setTotalState:UIGestureRecognizerStateBegan];
-    [self handlePan:pan withTranslation:CGPointMake(0, 0)];
-    
     
     // Delay execution of my block for 10 seconds.
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [pan setTotalState:UIGestureRecognizerStateBegan];
+        [self handlePan:pan withTranslation:CGPointMake(0, 0)];
+    });
+    
+    // Delay execution of my block for 10 seconds.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [pan setTotalState:UIGestureRecognizerStateChanged];
         [self handlePan:pan withTranslation:CGPointMake(120, 0)];
     });
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [pan setTotalState:UIGestureRecognizerStateChanged];
         [self handlePan:pan withTranslation:CGPointMake(250, 0)];
         [pan setTotalState:UIGestureRecognizerStateEnded];
