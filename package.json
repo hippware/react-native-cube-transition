@@ -1,6 +1,6 @@
 {
   "name": "react-native-cube-transition",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "React Native module for iOS that rotates components on a cube.",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,6 @@
   },
   "homepage": "https://github.com/tlackemann/react-native-cube-transition#readme",
   "dependencies": {
-    "react-navigation": "^1.0.0-beta.11"
+    "react-navigation": "^1.0.0-beta.19"
   }
 }
